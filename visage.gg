@@ -1,0 +1,1647 @@
+
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local Stats = game:GetService("Stats")
+local CoreGui = game:GetService("CoreGui")
+local StarterGui = game:GetService("StarterGui")
+local SoundService = game:GetService("SoundService")
+
+local LocalPlayer = Players.LocalPlayer
+
+local TargBindEnabled = true
+local TargetPlr
+local TargResolvePos
+
+
+
+local hitsounds = {
+    ["RIFK7"] = "rbxassetid://9102080552",
+    ["Bubble"] = "rbxassetid://9102092728",
+    ["Minecraft"] = "rbxassetid://5869422451",
+    ["Cod"] = "rbxassetid://160432334",
+    ["Bameware"] = "rbxassetid://6565367558",
+    ["Neverlose"] = "rbxassetid://6565370984",
+    ["Gamesense"] = "rbxassetid://4817809188",
+    ["Rust"] = "rbxassetid://6565371338",
+    ["BlackPencil"] = "https://github.com/Shatapmatehabibi/Hitsounds/raw/main/bananapencil.mp3.mp3"
+}
+
+local TargHighlight = Instance.new("Highlight")
+local utility = {
+    hi = Color3.fromRGB(0, 191, 255),
+    bye = Color3.fromRGB(0, 191, 255)
+}
+TargHighlight.Parent = CoreGui
+TargHighlight.FillColor = utility.hi
+TargHighlight.OutlineColor = utility.bye
+TargHighlight.FillTransparency = 0.5
+TargHighlight.OutlineTransparency = 0
+TargHighlight.Enabled = false
+
+local Tracer = Drawing.new("Line")
+Tracer.Visible = false
+Tracer.Color = Color3.fromRGB(44, 44, 44)
+Tracer.Thickness = 1
+Tracer.Transparency = 1
+
+
+
+local HitEffectModule = {
+    Locals = {
+        Type = {
+            ["Nova"] = nil,
+            ["Crescent Slash"] = nil,
+            ["Coom"] = nil,
+            ["Cosmic Explosion"] = nil,
+            ["Slash"] = nil,
+            ["Atomic Slash"] = nil,
+        },
+    },
+    Functions = {},
+    Settings = {
+        HitEffect = {
+            Color = Color3.fromRGB(0, 0, 0)
+        }
+    }
+}
+
+
+
+local Justify = {
+    Enabled = true, 
+    Keybind = "Q", 
+    Autoselect = false,
+    Prediction = 0.159748979134, 
+    RealPrediction = 0.14512470580, 
+    Resolver = false, 
+    ResolverType = "Recalculate", 
+    JumpOffset = 0.12389724521, 
+    RealJumpOffset = 0.05, 
+    HitParts = {"HumanoidRootPart"}, 
+    RealHitPart = "HumanoidRootPart", 
+    KoCheck = false, 
+    LookAt = false,
+    CSync = {
+        Enabled = false,
+        Type = "Orbit",
+        Distance = 10,
+        Height = 2,
+        Speed = 1,
+        RandomAmount = 10,
+    },
+    ViewAt = false,
+    Tracer = true,
+    Highlight = false,
+    Stats = false, 
+    UseFov = false,
+    HitEffect = false,
+    HitEffectType = "Coom", -- Nova, Crescent Slash, Coom, Cosmic Explosion, Slash, Atomic Slash
+    HitEffectColor = Color3.fromRGB(255, 255, 255),
+    HitSounds = false,
+    HitSound = "Neverlose",
+    HitChams = false,
+    HitChamsMaterial = Enum.Material.Neon,
+    HitChamsDuration = 1,
+    HitChamsColor = Color3.fromRGB(255, 255, 255)
+}
+
+local HitChamsFolder = Instance.new("Folder")
+HitChamsFolder.Name = "HitChamsFolder"
+HitChamsFolder.Parent = Workspace
+
+--// Crescent Slash
+
+do
+local Insane = Instance.new("Part")
+Insane.Parent = ReplicatedStorage
+
+local Attachment = Instance.new("Attachment")
+Attachment.Name = "Attachment"
+Attachment.Parent = Insane
+
+HitEffectModule.Locals.Type["Crescent Slash"] = Attachment
+
+local Glow = Instance.new("ParticleEmitter")
+Glow.Name = "Glow"
+Glow.Lifetime = NumberRange.new(0.16, 0.16)
+Glow.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.1421725, 0.6182796), NumberSequenceKeypoint.new(1, 1)})
+Glow.Color = ColorSequence.new(Color3.fromRGB(255, 255, 255))
+Glow.Speed = NumberRange.new(0, 0)
+Glow.Brightness = 5
+Glow.Size = NumberSequence.new(9.1873131, 16.5032349)
+Glow.Enabled = false
+Glow.ZOffset = -0.0565939
+Glow.Rate = 50
+Glow.Texture = "rbxassetid://8708637750"
+
+local Gradient1 = Instance.new("ParticleEmitter")
+Gradient1.Name = "Gradient1"
+Gradient1.Lifetime = NumberRange.new(0.3, 0.3)
+Gradient1.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.15, 0.3), NumberSequenceKeypoint.new(1, 1)})
+Gradient1.Color = ColorSequence.new(Color3.fromRGB(255, 255, 255))
+Gradient1.Speed = NumberRange.new(0, 0)
+Gradient1.Brightness = 6
+Gradient1.Size = NumberSequence.new(0, 11.6261358)
+Gradient1.Enabled = false
+Gradient1.ZOffset = 0.9187313
+Gradient1.Rate = 50
+Gradient1.Texture = "rbxassetid://8196169974"
+Gradient1.Parent = Attachment
+
+local Shards = Instance.new("ParticleEmitter")
+Shards.Name = "Shards"
+Shards.Lifetime = NumberRange.new(0.19, 0.7)
+Shards.SpreadAngle = Vector2.new(-90, 90)
+Shards.Color = ColorSequence.new(Color3.fromRGB(255, 255, 255))
+Shards.Drag = 10
+Shards.VelocitySpread = -90
+Shards.Squash = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5705521, 0.4125001), NumberSequenceKeypoint.new(1, -0.9375)})
+Shards.Speed = NumberRange.new(97.7530136, 146.9970093)
+Shards.Brightness = 4
+Shards.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.284774, 1.2389833, 0.1534118), NumberSequenceKeypoint.new(1, 0)})
+Shards.Enabled = false
+Shards.Acceleration = Vector3.new(0, -56.961341857910156, 0)
+Shards.ZOffset = 0.5705321
+Shards.Rate = 50
+Shards.Texture = "rbxassetid://8030734851"
+Shards.Rotation = NumberRange.new(90, 90)
+Shards.Orientation = Enum.ParticleOrientation.VelocityParallel
+Shards.Parent = Attachment
+
+local ShardsDark = Instance.new("ParticleEmitter")
+ShardsDark.Name = "ShardsDark"
+ShardsDark.Lifetime = NumberRange.new(0.19, 0.35)
+ShardsDark.SpreadAngle = Vector2.new(-90, 90)
+ShardsDark.Color = ColorSequence.new(Color3.fromRGB(255, 255, 255))
+ShardsDark.Drag = 10
+ShardsDark.VelocitySpread = -90
+ShardsDark.Squash = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5705521, 0.4125001), NumberSequenceKeypoint.new(1, -0.9375)})
+ShardsDark.Speed = NumberRange.new(97.7530136, 146.9970093)
+ShardsDark.Brightness = 4
+ShardsDark.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.290774, 0.6734411, 0.1534118), NumberSequenceKeypoint.new(1, 0)})
+ShardsDark.Enabled = false
+ShardsDark.ZOffset = 0.5705321
+ShardsDark.Rate = 50
+ShardsDark.Texture = "rbxassetid://8030734851"
+ShardsDark.Rotation = NumberRange.new(90, 90)
+ShardsDark.Orientation = Enum.ParticleOrientation.VelocityParallel
+ShardsDark.Parent = Attachment
+
+local Specs = Instance.new("ParticleEmitter")
+Specs.Name = "Specs"
+Specs.Lifetime = NumberRange.new(0.33, 1.4)
+Specs.SpreadAngle = Vector2.new(360, -1000)
+Specs.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Specs.Drag = 10
+Specs.VelocitySpread = 360
+Specs.Speed = NumberRange.new(36.7492523, 146.9970093)
+Specs.Brightness = 7
+Specs.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.200774, 2.0311937, 0.4363973), NumberSequenceKeypoint.new(1, 0)})
+Specs.Enabled = false
+Specs.Acceleration = Vector3.new(0, 36.74925231933594, 0)
+Specs.Rate = 50
+Specs.Texture = "rbxassetid://8030760338"
+Specs.EmissionDirection = Enum.NormalId.Right
+Specs.Parent = Attachment
+
+local Specs1 = Instance.new("ParticleEmitter")
+Specs1.Name = "Specs"
+Specs1.Lifetime = NumberRange.new(0.33, 1.75)
+Specs1.SpreadAngle = Vector2.new(90, -90)
+Specs1.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Specs1.Drag = 9
+Specs1.VelocitySpread = 90
+Specs1.Speed = NumberRange.new(42.2616425, 73.4985046)
+Specs1.Brightness = 6
+Specs1.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.210774, 0.3978962, 0.1855686), NumberSequenceKeypoint.new(1, 0)})
+Specs1.Enabled = false
+Specs1.Acceleration = Vector3.new(0, -20.21208953857422, 0)
+Specs1.ZOffset = 0.5144895
+Specs1.Rate = 50
+Specs1.Texture = "rbxassetid://8030760338"
+Specs1.Parent = Attachment
+
+local Specs2 = Instance.new("ParticleEmitter")
+Specs2.Name = "Specs"
+Specs2.Lifetime = NumberRange.new(0.19, 1.2)
+Specs2.SpreadAngle = Vector2.new(360, -1000)
+Specs2.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Specs2.Drag = 10
+Specs2.VelocitySpread = 360
+Specs2.Speed = NumberRange.new(36.7492523, 146.9970093)
+Specs2.Brightness = 7
+Specs2.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.200774, 2.0311937, 0.4363973), NumberSequenceKeypoint.new(1, 0)})
+Specs2.Enabled = false
+Specs2.Acceleration = Vector3.new(0, 36.74925231933594, 0)
+Specs2.Rate = 50
+Specs2.Texture = "rbxassetid://8030760338"
+Specs2.EmissionDirection = Enum.NormalId.Right
+Specs2.Parent = Attachment
+
+local Specs21 = Instance.new("ParticleEmitter")
+Specs21.Name = "Specs2"
+Specs21.Lifetime = NumberRange.new(0.19, 1.35)
+Specs21.SpreadAngle = Vector2.new(90, -90)
+Specs21.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Specs21.Drag = 12
+Specs21.VelocitySpread = 90
+Specs21.Speed = NumberRange.new(42.2616425, 73.4985046)
+Specs21.Brightness = 6
+Specs21.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.216774, 0.5721694, 0.1855686), NumberSequenceKeypoint.new(1, 0)})
+Specs21.Enabled = false
+Specs21.Acceleration = Vector3.new(0, -20.21208953857422, 0)
+Specs21.ZOffset = 0.5144895
+Specs21.Rate = 50
+Specs21.Texture = "rbxassetid://8030760338"
+Specs21.Parent = Attachment
+
+local ddddddddddddddddddd = Instance.new("ParticleEmitter")
+ddddddddddddddddddd.Name = "ddddddddddddddddddd"
+ddddddddddddddddddd.Lifetime = NumberRange.new(0.19, 0.37)
+ddddddddddddddddddd.SpreadAngle = Vector2.new(90, -90)
+ddddddddddddddddddd.LockedToPart = true
+ddddddddddddddddddd.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.6429392, 0), NumberSequenceKeypoint.new(1, 0)})
+ddddddddddddddddddd.LightEmission = 1
+ddddddddddddddddddd.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44), Color3.fromRGB(44, 44, 44))
+ddddddddddddddddddd.Drag = 6
+ddddddddddddddddddd.TimeScale = 0.7
+ddddddddddddddddddd.VelocitySpread = 90
+ddddddddddddddddddd.Speed = NumberRange.new(81.5833435, 110.2477646)
+ddddddddddddddddddd.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.410774, 0.6711507, 0.3356177), NumberSequenceKeypoint.new(1, 0)})
+ddddddddddddddddddd.Enabled = false
+ddddddddddddddddddd.Acceleration = Vector3.new(0, -81.58334350585938, 0)
+ddddddddddddddddddd.ZOffset = 0.8345273
+ddddddddddddddddddd.Rate = 50
+ddddddddddddddddddd.Texture = "rbxassetid://1053546634"
+ddddddddddddddddddd.RotSpeed = NumberRange.new(-444, 166)
+ddddddddddddddddddd.Rotation = NumberRange.new(-360, 360)
+ddddddddddddddddddd.Parent = Attachment
+
+local large_shard = Instance.new("ParticleEmitter")
+large_shard.Name = "large_shard"
+large_shard.Lifetime = NumberRange.new(0.19, 0.28)
+large_shard.SpreadAngle = Vector2.new(-90, 90)
+large_shard.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+large_shard.Drag = 10
+large_shard.VelocitySpread = -90
+large_shard.Squash = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5705521, 0.4125001), NumberSequenceKeypoint.new(1, -0.9375)})
+large_shard.Speed = NumberRange.new(97.7530136, 146.9970093)
+large_shard.Brightness = 4
+large_shard.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.260774, 3.515605, 0.1534118), NumberSequenceKeypoint.new(1, 0)})
+large_shard.Enabled = false
+large_shard.ZOffset = 0.5705321
+large_shard.Rate = 50
+large_shard.Texture = "rbxassetid://8030734851"
+large_shard.Rotation = NumberRange.new(90, 90)
+large_shard.Orientation = Enum.ParticleOrientation.VelocityParallel
+large_shard.Parent = Attachment
+
+local out_Specs = Instance.new("ParticleEmitter")
+out_Specs.Name = "out_Specs"
+out_Specs.Lifetime = NumberRange.new(0.19, 1)
+out_Specs.SpreadAngle = Vector2.new(44, -1000)
+out_Specs.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+out_Specs.Drag = 10
+out_Specs.VelocitySpread = 44
+out_Specs.Speed = NumberRange.new(36.7492523, 146.9970093)
+out_Specs.Brightness = 7
+out_Specs.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.244774, 0.5469525, 0.1433053), NumberSequenceKeypoint.new(1, 0)})
+out_Specs.Enabled = false
+out_Specs.Acceleration = Vector3.new(0, -3.215559720993042, 0)
+out_Specs.Rate = 50
+out_Specs.Texture = "rbxassetid://8030760338"
+out_Specs.EmissionDirection = Enum.NormalId.Right
+out_Specs.Parent = Attachment
+
+local Effect = Instance.new("ParticleEmitter")
+Effect.Name = "Effect"
+Effect.Lifetime = NumberRange.new(0.4, 0.7)
+Effect.FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4
+Effect.SpreadAngle = Vector2.new(360, -360)
+Effect.LockedToPart = true
+Effect.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.1070999, 0.19375), NumberSequenceKeypoint.new(0.7761194, 0.88125), NumberSequenceKeypoint.new(1, 1)})
+Effect.LightEmission = 1
+Effect.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Effect.Drag = 1
+Effect.VelocitySpread = 360
+Effect.Speed = NumberRange.new(0.0036749, 0.0036749)
+Effect.Brightness = 2.0999999
+Effect.Size = NumberSequence.new(6.9680691, 9.9213123)
+Effect.Enabled = false
+Effect.ZOffset = 0.4777403
+Effect.Rate = 50
+Effect.Texture = "rbxassetid://9484012464"
+Effect.RotSpeed = NumberRange.new(-150, -150)
+Effect.FlipbookMode = Enum.ParticleFlipbookMode.OneShot
+Effect.Rotation = NumberRange.new(50, 50)
+Effect.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+Effect.Parent = Attachment
+
+local Crescents = Instance.new("ParticleEmitter")
+Crescents.Name = "Crescents"
+Crescents.Lifetime = NumberRange.new(0.19, 0.38)
+Crescents.SpreadAngle = Vector2.new(-360, 360)
+Crescents.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.1932907, 0), NumberSequenceKeypoint.new(0.778754, 0), NumberSequenceKeypoint.new(1, 1)})
+Crescents.LightEmission = 1
+Crescents.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Crescents.VelocitySpread = -360
+Crescents.Speed = NumberRange.new(0.0826858, 0.0826858)
+Crescents.Brightness = 20
+Crescents.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.398774, 8.8026266, 2.2834616), NumberSequenceKeypoint.new(1, 11.477972, 1.860431)})
+Crescents.Enabled = false
+Crescents.ZOffset = 0.4542207
+Crescents.Rate = 50
+Crescents.Texture = "rbxassetid://12509373457"
+Crescents.RotSpeed = NumberRange.new(800, 1000)
+Crescents.Rotation = NumberRange.new(-360, 360)
+Crescents.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+Crescents.Parent = Attachment
+
+Insane.Parent = workspace
+end
+
+do --// Cosmic Explosion
+
+local Part = Instance.new("Part")
+
+Part.Parent = ReplicatedStorage
+
+local Attachment = Instance.new("Attachment")
+Attachment.Name = "Attachment"
+Attachment.Parent = Part
+
+HitEffectModule.Locals.Type["Cosmic Explosion"] = Attachment
+
+local Glow = Instance.new("ParticleEmitter")
+Glow.Name = "Glow"
+Glow.Lifetime = NumberRange.new(0.16, 0.16)
+Glow.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.1421725, 0.6182796), NumberSequenceKeypoint.new(1, 1)})
+Glow.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Glow.Speed = NumberRange.new(0, 0)
+Glow.Brightness = 5
+Glow.Size = NumberSequence.new(9.1873131, 16.5032349)
+Glow.Enabled = false
+Glow.ZOffset = -0.0565939
+Glow.Rate = 50
+Glow.Texture = "rbxassetid://8708637750"
+Glow.Parent = Attachment
+
+local Effect = Instance.new("ParticleEmitter")
+Effect.Name = "Effect"
+Effect.Lifetime = NumberRange.new(0.4, 0.7)
+Effect.FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4
+Effect.SpreadAngle = Vector2.new(360, -360)
+Effect.LockedToPart = true
+Effect.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.1070999, 0.19375), NumberSequenceKeypoint.new(0.7761194, 0.88125), NumberSequenceKeypoint.new(1, 1)})
+Effect.LightEmission = 1
+Effect.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Effect.Drag = 1
+Effect.VelocitySpread = 360
+Effect.Speed = NumberRange.new(0.0036749, 0.0036749)
+Effect.Brightness = 2.0999999
+Effect.Size = NumberSequence.new(6.9680691, 9.9213123)
+Effect.Enabled = false
+Effect.ZOffset = 0.4777403
+Effect.Rate = 50
+Effect.Texture = "rbxassetid://9484012464"
+Effect.RotSpeed = NumberRange.new(-150, -150)
+Effect.FlipbookMode = Enum.ParticleFlipbookMode.OneShot
+Effect.Rotation = NumberRange.new(50, 50)
+Effect.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+Effect.Parent = Attachment
+
+local Gradient1 = Instance.new("ParticleEmitter")
+Gradient1.Name = "Gradient1"
+Gradient1.Lifetime = NumberRange.new(0.3, 0.3)
+Gradient1.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.15, 0.3), NumberSequenceKeypoint.new(1, 1)})
+Gradient1.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Gradient1.Speed = NumberRange.new(0, 0)
+Gradient1.Brightness = 6
+Gradient1.Size = NumberSequence.new(0, 11.6261358)
+Gradient1.Enabled = false
+Gradient1.ZOffset = 0.9187313
+Gradient1.Rate = 50
+Gradient1.Texture = "rbxassetid://8196169974"
+Gradient1.Parent = Attachment
+
+local Shards = Instance.new("ParticleEmitter")
+Shards.Name = "Shards"
+Shards.Lifetime = NumberRange.new(0.19, 0.7)
+Shards.SpreadAngle = Vector2.new(-90, 90)
+Shards.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Shards.Drag = 10
+Shards.VelocitySpread = -90
+Shards.Squash = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5705521, 0.4125001), NumberSequenceKeypoint.new(1, -0.9375)})
+Shards.Speed = NumberRange.new(97.7530136, 146.9970093)
+Shards.Brightness = 4
+Shards.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.284774, 1.2389833, 0.1534118), NumberSequenceKeypoint.new(1, 0)})
+Shards.Enabled = false
+Shards.Acceleration = Vector3.new(0, -56.961341857910156, 0)
+Shards.ZOffset = 0.5705321
+Shards.Rate = 50
+Shards.Texture = "rbxassetid://8030734851"
+Shards.Rotation = NumberRange.new(90, 90)
+Shards.Orientation = Enum.ParticleOrientation.VelocityParallel
+Shards.Parent = Attachment
+
+local Crescents = Instance.new("ParticleEmitter")
+Crescents.Name = "Crescents"
+Crescents.Lifetime = NumberRange.new(0.19, 0.38)
+Crescents.SpreadAngle = Vector2.new(-360, 360)
+Crescents.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.1932907, 0), NumberSequenceKeypoint.new(0.778754, 0), NumberSequenceKeypoint.new(1, 1)})
+Crescents.LightEmission = 10
+Crescents.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Crescents.VelocitySpread = -360
+Crescents.Speed = NumberRange.new(0.0826858, 0.0826858)
+Crescents.Brightness = 4
+Crescents.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.398774, 8.8026266, 2.2834616), NumberSequenceKeypoint.new(1, 11.477972, 1.860431)})
+Crescents.Enabled = false
+Crescents.ZOffset = 0.4542207
+Crescents.Rate = 50
+Crescents.Texture = "rbxassetid://12509373457"
+Crescents.RotSpeed = NumberRange.new(800, 1000)
+Crescents.Rotation = NumberRange.new(-360, 360)
+Crescents.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+Crescents.Parent = Attachment
+
+local ParticleEmitter2 = Instance.new("ParticleEmitter")
+ParticleEmitter2.Name = "ParticleEmitter2"
+ParticleEmitter2.FlipbookFramerate = NumberRange.new(20, 20)
+ParticleEmitter2.Lifetime = NumberRange.new(0.19, 0.38)
+ParticleEmitter2.FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4
+ParticleEmitter2.SpreadAngle = Vector2.new(360, 360)
+ParticleEmitter2.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.209842, 0.5), NumberSequenceKeypoint.new(0.503842, 0.263333), NumberSequenceKeypoint.new(0.799842, 0.5), NumberSequenceKeypoint.new(1, 1)})
+ParticleEmitter2.LightEmission = 1
+ParticleEmitter2.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+ParticleEmitter2.VelocitySpread = 360
+ParticleEmitter2.Speed = NumberRange.new(0.0161231, 0.0161231)
+ParticleEmitter2.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 4.3125), NumberSequenceKeypoint.new(0.3985056, 7.9375), NumberSequenceKeypoint.new(1, 10)})
+ParticleEmitter2.Enabled = false
+ParticleEmitter2.ZOffset = 0.15
+ParticleEmitter2.Rate = 100
+ParticleEmitter2.Texture = "http://www.roblox.com/asset/?id=12394566430"
+ParticleEmitter2.FlipbookMode = Enum.ParticleFlipbookMode.OneShot
+ParticleEmitter2.Rotation = NumberRange.new(39, 999)
+ParticleEmitter2.Orientation = Enum.ParticleOrientation.VelocityParallel
+ParticleEmitter2.Parent = Attachment
+
+Part.Parent = workspace
+end
+
+do --// Coom
+
+local Part = Instance.new("Part")
+
+Part.Parent = ReplicatedStorage
+
+local Attachment = Instance.new("Attachment")
+Attachment.Parent = Part
+
+HitEffectModule.Locals.Type["Coom"] = Attachment
+
+local Foam = Instance.new("ParticleEmitter")
+Foam.Name = "Foam"
+Foam.LightInfluence = 0.5
+Foam.Lifetime = NumberRange.new(1, 1)
+Foam.SpreadAngle = Vector2.new(360, -360)
+Foam.VelocitySpread = 360
+Foam.Squash = NumberSequence.new(1)
+Foam.Speed = NumberRange.new(20, 20)
+Foam.Brightness = 2.5
+Foam.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.1016692, 0.6508875, 0.6508875), NumberSequenceKeypoint.new(0.6494689, 1.4201183, 0.4127519), NumberSequenceKeypoint.new(1, 0)})
+Foam.Enabled = false
+Foam.Acceleration = Vector3.new(0, -66.04029846191406, 0)
+Foam.Rate = 100
+Foam.Texture = "rbxassetid://8297030850"
+Foam.Rotation = NumberRange.new(-90, -90)
+Foam.Orientation = Enum.ParticleOrientation.VelocityParallel
+Foam.Parent = Attachment
+
+Part.Parent = workspace
+end
+
+do --// Slash
+local Part = Instance.new("Part")
+Part.Parent = ReplicatedStorage
+
+local Attachment = Instance.new("Attachment")
+Attachment.Parent = Part
+
+HitEffectModule.Locals.Type["Slash"] = Attachment
+
+local Crescents = Instance.new("ParticleEmitter")
+Crescents.Name = "Crescents"
+Crescents.Lifetime = NumberRange.new(0.19, 0.38)
+Crescents.SpreadAngle = Vector2.new(-360, 360)
+Crescents.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.1932907, 0), NumberSequenceKeypoint.new(0.778754, 0), NumberSequenceKeypoint.new(1, 1)})
+Crescents.LightEmission = 10
+Crescents.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(44, 44, 44)), ColorSequenceKeypoint.new(0.3160622, Color3.fromRGB(44, 44, 44)), ColorSequenceKeypoint.new(0.5146805, Color3.fromRGB(44, 44, 44)), ColorSequenceKeypoint.new(1, Color3.fromRGB(44, 44, 44))})
+Crescents.VelocitySpread = -360
+Crescents.Speed = NumberRange.new(0.0826858, 0.0826858)
+Crescents.Brightness = 4
+Crescents.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.398774, 8.8026266, 2.2834616), NumberSequenceKeypoint.new(1, 11.477972, 1.860431)})
+Crescents.Enabled = false
+Crescents.ZOffset = 0.4542207
+Crescents.Rate = 50
+Crescents.Texture = "rbxassetid://12509373457"
+Crescents.RotSpeed = NumberRange.new(800, 1000)
+Crescents.Rotation = NumberRange.new(-360, 360)
+Crescents.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+Crescents.Parent = Attachment
+
+Part.Parent = workspace
+end
+
+do --// Atomic Slash
+
+local Part = Instance.new("Part")
+
+Part.Parent = ReplicatedStorage
+
+local Attachment = Instance.new("Attachment")
+Attachment.Parent = Part
+
+HitEffectModule.Locals.Type["Atomic Slash"] = Attachment
+
+local Crescents = Instance.new("ParticleEmitter")
+Crescents.Name = "Crescents"
+Crescents.Lifetime = NumberRange.new(0.19, 0.38)
+Crescents.SpreadAngle = Vector2.new(-360, 360)
+Crescents.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.1932907, 0), NumberSequenceKeypoint.new(0.778754, 0), NumberSequenceKeypoint.new(1, 1)})
+Crescents.LightEmission = 10
+Crescents.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Crescents.VelocitySpread = -360
+Crescents.Speed = NumberRange.new(0.0826858, 0.0826858)
+Crescents.Brightness = 4
+Crescents.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.398774, 8.8026266, 2.2834616), NumberSequenceKeypoint.new(1, 11.477972, 1.860431)})
+Crescents.Enabled = false
+Crescents.ZOffset = 0.4542207
+Crescents.Rate = 50
+Crescents.Texture = "rbxassetid://12509373457"
+Crescents.RotSpeed = NumberRange.new(800, 1000)
+Crescents.Rotation = NumberRange.new(-360, 360)
+Crescents.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+Crescents.Parent = Attachment
+
+local Glow = Instance.new("ParticleEmitter")
+Glow.Name = "Glow"
+Glow.Lifetime = NumberRange.new(0.16, 0.16)
+Glow.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.1421725, 0.6182796), NumberSequenceKeypoint.new(1, 1)})
+Glow.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Glow.Speed = NumberRange.new(0, 0)
+Glow.Brightness = 5
+Glow.Size = NumberSequence.new(9.1873131, 16.5032349)
+Glow.Enabled = false
+Glow.ZOffset = -0.0565939
+Glow.Rate = 50
+Glow.Texture = "rbxassetid://8708637750"
+Glow.Parent = Attachment
+
+local Effect = Instance.new("ParticleEmitter")
+Effect.Name = "Effect"
+Effect.Lifetime = NumberRange.new(0.4, 0.7)
+Effect.FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4
+Effect.SpreadAngle = Vector2.new(360, -360)
+Effect.LockedToPart = true
+Effect.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.1070999, 0.19375), NumberSequenceKeypoint.new(0.7761194, 0.88125), NumberSequenceKeypoint.new(1, 1)})
+Effect.LightEmission = 1
+Effect.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Effect.Drag = 1
+Effect.VelocitySpread = 360
+Effect.Speed = NumberRange.new(0.0036749, 0.0036749)
+Effect.Brightness = 2.0999999
+Effect.Size = NumberSequence.new(6.9680691, 9.9213123)
+Effect.Enabled = false
+Effect.ZOffset = 0.4777403
+Effect.Rate = 50
+Effect.Texture = "rbxassetid://9484012464"
+Effect.RotSpeed = NumberRange.new(-150, -150)
+Effect.FlipbookMode = Enum.ParticleFlipbookMode.OneShot
+Effect.Rotation = NumberRange.new(50, 50)
+Effect.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+Effect.Parent = Attachment
+
+local Gradient1 = Instance.new("ParticleEmitter")
+Gradient1.Name = "Gradient1"
+Gradient1.Lifetime = NumberRange.new(0.3, 0.3)
+Gradient1.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.15, 0.3), NumberSequenceKeypoint.new(1, 1)})
+Gradient1.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Gradient1.Speed = NumberRange.new(0, 0)
+Gradient1.Brightness = 6
+Gradient1.Size = NumberSequence.new(0, 11.6261358)
+Gradient1.Enabled = false
+Gradient1.ZOffset = 0.9187313
+Gradient1.Rate = 50
+Gradient1.Texture = "rbxassetid://8196169974"
+Gradient1.Parent = Attachment
+
+local Shards = Instance.new("ParticleEmitter")
+Shards.Name = "Shards"
+Shards.Lifetime = NumberRange.new(0.19, 0.7)
+Shards.SpreadAngle = Vector2.new(-90, 90)
+Shards.Color = ColorSequence.new(Color3.fromRGB(44, 44, 44))
+Shards.Drag = 10
+Shards.VelocitySpread = -90
+Shards.Squash = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5705521, 0.4125001), NumberSequenceKeypoint.new(1, -0.9375)})
+Shards.Speed = NumberRange.new(97.7530136, 146.9970093)
+Shards.Brightness = 4
+Shards.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.284774, 1.2389833, 0.1534118), NumberSequenceKeypoint.new(1, 0)})
+Shards.Enabled = false
+Shards.Acceleration = Vector3.new(0, -56.961341857910156, 0)
+Shards.ZOffset = 0.5705321
+Shards.Rate = 50
+Shards.Texture = "rbxassetid://8030734851"
+Shards.Rotation = NumberRange.new(90, 90)
+Shards.Orientation = Enum.ParticleOrientation.VelocityParallel
+Shards.Parent = Attachment
+
+Part.Parent = workspace
+end
+
+do
+    local part = Instance.new("Part")
+    part.Parent = ReplicatedStorage
+    local attachment = Instance.new("Attachment")
+    attachment.Name = "Attachment"
+    attachment.Parent = part
+    HitEffectModule.Locals.Type["Nova"] = attachment
+
+    local function createParticleEmitter(acceleration)
+        local emitter = Instance.new("ParticleEmitter")
+        emitter.Name = "ParticleEmitter"
+        emitter.Acceleration = acceleration
+        emitter.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+            ColorSequenceKeypoint.new(0.495, HitEffectModule.Settings.HitEffect.Color),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+        })
+        emitter.Lifetime = NumberRange.new(0.5, 0.5)
+        emitter.LightEmission = 1
+        emitter.LockedToPart = true
+        emitter.Rate = 1
+        emitter.Rotation = NumberRange.new(0, 360)
+        emitter.Size = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 1),
+            NumberSequenceKeypoint.new(1, 10),
+            NumberSequenceKeypoint.new(1, 1)
+        })
+        emitter.Speed = NumberRange.new(0, 0)
+        emitter.Texture = "rbxassetid://1084991215"
+        emitter.Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 0),
+            NumberSequenceKeypoint.new(0, 0.1),
+            NumberSequenceKeypoint.new(0.534, 0.25),
+            NumberSequenceKeypoint.new(1, 0.5),
+            NumberSequenceKeypoint.new(1, 0)
+        })
+        emitter.ZOffset = 1
+        emitter.Parent = attachment
+        return emitter
+    end
+
+    createParticleEmitter(Vector3.new(0, 0, 1))
+    local perpendicularEmitter = createParticleEmitter(Vector3.new(0, 1, -0.001))
+    perpendicularEmitter.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+end
+
+HitEffectModule.Functions.Effect = function(character, color)
+    if not character then return end
+    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+    if not humanoidRootPart then return end
+
+    local effectAttachment = HitEffectModule.Locals.Type[Justify.HitEffectType]:Clone()
+    effectAttachment.Parent = humanoidRootPart
+
+    for _, emitter in pairs(effectAttachment:GetChildren()) do
+        if emitter:IsA("ParticleEmitter") then
+            emitter.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+                ColorSequenceKeypoint.new(0.495, color or HitEffectModule.Settings.HitEffectColor),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+            })
+            emitter:Emit()
+        end
+    end
+
+    task.delay(2, function()
+        effectAttachment:Destroy()
+    end)
+end
+
+local function PlayHitSound()
+    if Justify.HitSounds and hitsounds[Justify.HitSound] then
+        local sound = Instance.new("Sound")
+        sound.SoundId = hitsounds[Justify.HitSound]
+        sound.Parent = SoundService
+        sound:Play()
+        sound.Ended:Connect(function()
+            sound:Destroy()
+        end)
+    end
+end
+
+local TweenService = game:GetService("TweenService")
+
+local function HitChams(Player)
+    if not Justify.HitChams then return end
+
+    if Player and Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") then
+        Player.Character.Archivable = true
+        local Cloned = Player.Character:Clone()
+        Cloned.Name = "Player Clone"
+
+        local BodyParts = {
+            "Head", "UpperTorso", "LowerTorso",
+            "LeftUpperArm", "LeftLowerArm", "LeftHand",
+            "RightUpperArm", "RightLowerArm", "RightHand",
+            "LeftUpperLeg", "LeftLowerLeg", "LeftFoot",
+            "RightUpperLeg", "RightLowerLeg", "RightFoot"
+        }
+
+        for _, Part in ipairs(Cloned:GetChildren()) do
+            if Part:IsA("BasePart") then
+                local PartValid = false
+                for _, validPart in ipairs(BodyParts) do
+                    if Part.Name == validPart then
+                        PartValid = true
+                        break
+                    end
+                end
+                
+                if not PartValid then
+                    Part:Destroy()
+                end
+            elseif Part:IsA("Accessory") or Part:IsA("Tool") or Part.Name == "face" or Part:IsA("Shirt") or Part:IsA("Pants") or Part:IsA("Hat") then
+                Part:Destroy()
+            end
+        end
+
+        if Cloned:FindFirstChild("Humanoid") then
+            Cloned.Humanoid:Destroy()
+        end
+
+        for _, BodyPart in ipairs(Cloned:GetChildren()) do
+            if BodyPart:IsA("BasePart") then
+                BodyPart.CanCollide = false
+                BodyPart.Anchored = true
+                BodyPart.Transparency = Justify.HitChamsTransparency
+                BodyPart.Color = Justify.HitChamsColor
+                BodyPart.Material = Justify.HitChamsMaterial
+            end
+        end
+
+        if Cloned:FindFirstChild("Head") then
+            local Head = Cloned.Head
+            Head.Transparency = Justify.HitChamsTransparency
+            Head.Color = Justify.HitChamsColor
+            Head.Material = Justify.HitChamsMaterial
+
+            if Head:FindFirstChild("face") then
+                Head.face:Destroy()
+            end
+        end
+
+        Cloned.Parent = game.Workspace
+
+        local tweenInfo = TweenInfo.new(
+            Justify.HitChamsDuration,
+            Enum.EasingStyle.Sine,
+            Enum.EasingDirection.InOut,
+            0,
+            true
+        )
+
+        for _, BodyPart in ipairs(Cloned:GetChildren()) do
+            if BodyPart:IsA("BasePart") then
+                local tween = TweenService:Create(BodyPart, tweenInfo, { Transparency = 1 })
+                tween:Play()
+            end
+        end
+
+        task.delay(Justify.HitChamsDuration, function()
+            if Cloned and Cloned.Parent then
+                Cloned:Destroy()
+            end
+        end)
+    end
+end
+
+local targetHealth = nil
+
+local function updateTargetHealth()
+    if TargBindEnabled and TargetPlr and TargetPlr.Character then
+        local humanoid = TargetPlr.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            local currentHealth = humanoid.Health
+            if currentHealth < targetHealth then
+                PlayHitSound()
+                HitEffectModule.Functions.Effect(TargetPlr.Character)
+                HitChams(TargetPlr)
+            end
+            targetHealth = currentHealth
+        end
+    end
+end
+
+local function ClosestPlr(Part)
+    local Closest
+    local Distance = math.huge
+    local ScreenCenter = Vector2.new(Workspace.CurrentCamera.ViewportSize.X / 2, Workspace.CurrentCamera.ViewportSize.Y / 2)
+    for _, Target in pairs(Players:GetPlayers()) do
+        if Target ~= LocalPlayer and Target.Character and Target.Character:FindFirstChild(Part) then
+            local Position = Workspace.CurrentCamera:WorldToViewportPoint(Target.Character[Part].Position)
+            local Magnitude = (Vector2.new(Position.X, Position.Y) - ScreenCenter).Magnitude
+            if Magnitude < Distance then
+                Closest = Target
+                Distance = Magnitude
+            end
+        end
+    end
+    return Closest
+end
+
+local function Resolver(Target, Aimbot)
+    local Part = Target.Character[Aimbot.RealHitPart]
+    local CurrentPosition = Part.Position
+    local CurrentTime = tick()
+    wait()
+    local NewPosition = Part.Position
+    local NewTime = tick()
+    local DistanceTraveled = (NewPosition - CurrentPosition)
+    local TimeInterval = NewTime - CurrentTime
+    local Velocity = DistanceTraveled / TimeInterval
+    CurrentPosition = NewPosition
+    CurrentTime = NewTime
+    if Aimbot.ResolverType == "Estimate" then
+        return Target.Character.Humanoid.MoveDirection * Target.Character.Humanoid.WalkSpeed
+    end
+    return Velocity
+end
+
+local LocalPlayer = game.Players.LocalPlayer
+local Argument = "MOUSE"
+local MainEvent = nil
+local Character
+
+function GetGame()
+    local game_support = {
+        ["UpdateMousePosI2"] = {
+            2788229376,
+            7213786345,
+            16033173781,
+        },
+        ["MousePos"] = {
+            5602055394,
+            7951883376,
+        },
+        ["MOUSE"] = {
+            125825216602676,
+            15186202290,
+            18111448661,
+            18111451594,
+            16560956150,
+            18198680772,
+            17564718305,
+            17564716597,
+        },
+        ["UpdateMousePos"] = {
+            17897702920,
+            11143225577,
+            86382109024302,
+            17502123056,
+            14174018683,
+            18177028900,
+            18459606288,
+            17721393836,
+            17809101348,
+            16859411452,
+            18129399112,
+            17079102898,
+            17061444544,
+            17344804827,
+            15644861772,
+            18710690149,
+        },
+        ["MoonUpdateMousePos"] = {
+            15166543806,
+        }
+    }
+    return game_support
+end
+
+task.spawn(function()
+    local game_support = GetGame()
+    for Index, Value in pairs(game_support) do 
+        if table.find(Value, game.PlaceId) then 
+            Argument = Index
+            break
+        end
+    end
+
+    for _, Value in pairs(game.ReplicatedStorage:GetChildren()) do
+        if Value.Name == "MainEvent" or Value.Name == "Bullets" or 
+           Value.Name == ".gg/untitledhood" or Value.Name == "Remote" or 
+           Value.Name == "MAINEVENT" then
+            MainEvent = Value
+            break 
+        end
+    end
+end)
+
+local function CharAdded()
+    if Character then
+        Character.ChildAdded:Connect(function(tool)
+            if tool:IsA("Tool") then
+                tool.Activated:Connect(function()
+                    if MainEvent and Argument then
+                        if Justify.Enabled and TargBindEnabled and TargetPlr and TargetPlr.Character and TargetPlr.Character:FindFirstChild(Justify.RealHitPart) then
+                            local AimPosition
+                            if Justify.Resolver then
+                                AimPosition = TargetPlr.Character[Justify.RealHitPart].Position + Vector3.new(0, Justify.RealJumpOffset, 0) + (TargResolvePos * Justify.RealPrediction)
+                            else
+                                AimPosition = TargetPlr.Character[Justify.RealHitPart].Position + Vector3.new(0, Justify.RealJumpOffset, 0) + (TargetPlr.Character[Justify.RealHitPart].AssemblyLinearVelocity * Justify.RealPrediction)
+                            end
+                            MainEvent:FireServer(Argument, AimPosition)
+
+                           
+                        end
+                    end
+                end)
+            end
+        end)
+    end
+end
+
+LocalPlayer.CharacterAdded:Connect(function(newchar)
+    Character = newchar
+    CharAdded()
+end)
+
+if LocalPlayer.Character then
+    Character = LocalPlayer.Character
+    CharAdded()
+end
+
+
+RunService.Heartbeat:Connect(function()
+    if Justify.Enabled and TargBindEnabled and TargetPlr then
+        TargResolvePos = Resolver(TargetPlr, Justify)
+    end
+    updateTargetHealth()
+    
+                            if Justify.LookAt and TargetPlr then
+                                LocalPlayer.Character.Humanoid.AutoRotate = false
+                                local OldCframe = LocalPlayer.Character.PrimaryPart.CFrame
+                                LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(LocalPlayer.Character.PrimaryPart.Position, Vector3.new(TargetPlr.Character.HumanoidRootPart.Position.X, OldCframe.Position.Y, TargetPlr.Character.HumanoidRootPart.Position.Z)))
+                            else
+                                LocalPlayer.Character.Humanoid.AutoRotate = true
+                            end
+                             if Justify.ViewAt and TargetPlr and LocalPlayer then
+                                Workspace.CurrentCamera.CameraSubject = TargetPlr.Character.Humanoid
+                            else
+                                Workspace.CurrentCamera.CameraSubject = LocalPlayer.Character.Humanoid
+                            end
+end)
+
+local Tool = Instance.new("Tool")
+Tool.RequiresHandle = false
+Tool.Name = "aimlock"
+Tool.Parent = nil
+
+local player = game.Players.LocalPlayer
+
+
+Tool.Activated:Connect(function()
+        if Justify.Enabled then
+            local Closest = ClosestPlr(Justify.RealHitPart)
+            if Closest then
+                if TargBindEnabled then
+                    TargBindEnabled = false
+                    targetHealth = nil
+                    if Justify.LookAt then
+                        LocalPlayer.Character.Humanoid.AutoRotate = true
+                    end
+                    if Justify.ViewAt then
+                        Workspace.CurrentCamera.CameraSubject = LocalPlayer.Character.Humanoid
+                    end
+                    StarterGui:SetCore("SendNotification", {
+                        Title = "Target Unlocked",
+                        Text = "Untargeted: " .. TargetPlr.DisplayName,
+                        Duration = 3
+                    })
+                else
+                    TargBindEnabled = true
+                    TargetPlr = Closest
+                    targetHealth = TargetPlr.Character:FindFirstChild("Humanoid").Health
+                    StarterGui:SetCore("SendNotification", {
+                        Title = "Target Locked",
+                        Text = "Targeting: " .. TargetPlr.DisplayName,
+                        Duration = 3
+                    })
+                end
+            end
+        end
+end)
+
+local KO = true
+local key = Enum.KeyCode[Justify.Keybind or "E"]
+local Library = loadstring(game:HttpGet("https://gist.githubusercontent.com/public-account-7/4b907aec6a087aad58de0eca2d5d7052/raw/2b88e28400d96d33bc45c828a8e1e7748685cd75/gistfile1.txt", true))()
+
+UserInputService.InputBegan:Connect(function(input)
+ if key and input.KeyCode == key then
+        if Justify.Enabled then
+            local Closest = ClosestPlr(Justify.RealHitPart)
+            if Closest then
+                if TargBindEnabled then
+                    TargBindEnabled = false
+                    targetHealth = nil
+                     TargetPlr = nil
+                    if Justify.LookAt then
+                        LocalPlayer.Character.Humanoid.AutoRotate = true
+                    end
+                    if Justify.ViewAt then
+                        Workspace.CurrentCamera.CameraSubject = LocalPlayer.Character.Humanoid
+                    end
+                    Library:Notification("Unlocked", 3, Library.Accent)
+                else
+                    TargBindEnabled = true
+                    TargetPlr = Closest
+                    targetHealth = TargetPlr.Character:FindFirstChild("Humanoid").Health
+                    Library:Notification("visage.gg locked:" .. tostring(TargetPlr.DisplayName), 3, Library.Accent)
+                end
+            end
+        end
+    end
+end)
+
+RunService.Heartbeat:Connect(function()
+    if Justify.Enabled and TargBindEnabled and TargetPlr then
+        TargResolvePos = Resolver(TargetPlr, Justify)
+    end
+    updateTargetHealth()
+end)
+
+RunService.Heartbeat:Connect(function()
+    if Justify.Enabled and Justify.Autoselect then
+        TargetPlr = ClosestPlr(Justify.RealHitPart)
+if TargetPlr then
+targetHealth = TargetPlr.Character:FindFirstChild("Humanoid").Health
+end
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    if Justify.Enabled and TargBindEnabled and Justify.Highlight and TargetPlr and TargetPlr.Character then
+        TargHighlight.Adornee = TargetPlr.Character
+        TargHighlight.Enabled = true
+        TargHighlight.FillColor = utility.hi
+        TargHighlight.OutlineColor = utility.bye
+    else
+        TargHighlight.Adornee = nil
+        TargHighlight.Enabled = false
+    end
+end)
+
+local function GetPrediction(ping)
+    local a = 0.064
+    local b = 0.01
+    local c = 0.01
+    return a * math.exp(b * ping) + c
+end
+
+local debounce = false
+
+
+
+
+RunService.RenderStepped:Connect(function()
+    if Justify.Enabled and TargBindEnabled and Justify.AutoPred then
+        Justify.RealPrediction = GetPrediction(math.round(Stats.Network.ServerStatsItem["Data Ping"]:GetValue()))
+    else
+        Justify.RealPrediction = Justify.Prediction
+    end
+end)
+
+
+local Saved
+local Client = game.Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+local nigga = {}
+local IgnoreFolder = Instance.new("Folder", game:GetService("Workspace"))
+local desync_setback = Instance.new("Part")
+desync_setback.Name = "visage.gg";
+desync_setback.Parent = workspace;
+desync_setback.Size = Client.Character.Humanoid.RootPart.Size;
+desync_setback.CanCollide = false; 
+desync_setback.Anchored = true; 
+desync_setback.Transparency = 1; 
+ nigga["CFrameVisualize"] = game:GetObjects("rbxassetid://9474737816")[1]; nigga["CFrameVisualize"].Head.Face:Destroy(); for _, v in pairs(nigga["CFrameVisualize"]:GetChildren()) do v.Transparency = v.Name == "HumanoidRootPart" and 1 or 0.70; v.Material = "Neon"; v.Color = Color3.fromRGB(255,255,255); v.CanCollide = false; v.Anchored = false end
+game:GetService('RunService').Heartbeat:Connect(function()
+ nigga["CFrameVisualize"].Parent = Justify.CSync.Enabled and IgnoreFolder or nil
+    if Justify.CSync.Enabled and TargetPlr then
+        local FakeCFrame = Client.Character.HumanoidRootPart.CFrame
+        Saved = Client.Character.HumanoidRootPart.CFrame
+        if TargBindEnabled and Justify.CSync.Type == "Random" then
+            FakeCFrame = CFrame.new(TargetPlr.Character.HumanoidRootPart.Position + Vector3.new(math.random(-Justify.CSync.RandomAmount, Justify.CSync.RandomAmount), math.random(-0, Justify.CSync.RandomAmount), math.random(-Justify.CSync.RandomAmount, Justify.CSync.RandomAmount))) * CFrame.Angles(math.rad(math.random(0, 360)), math.rad(math.random(0, 360)), math.rad(math.random(0, 360)))
+        elseif TargBindEnabled and Justify.CSync.Type == "Orbit" then
+        local CurrentTime = tick()
+            FakeCFrame = CFrame.new(TargetPlr.Character.HumanoidRootPart.Position) * CFrame.Angles(0, 2 * math.pi * CurrentTime * Justify.CSync.Speed % (2 * math.pi), 0) * CFrame.new(0, Justify.CSync.Height, Justify.CSync.Distance)
+        end
+
+        nigga["CFrameVisualize"]:SetPrimaryPartCFrame(FakeCFrame)
+
+        for _, Part in pairs(nigga["CFrameVisualize"]:GetChildren()) do
+            Part.Color = Color3.fromRGB(255,255,255)
+        end
+
+        Client.Character.HumanoidRootPart.CFrame = FakeCFrame
+
+        game:GetService("RunService").RenderStepped:Wait()
+
+        desync_setback.Position = Saved.Position + Vector3.new(0, 1.5, 0)
+        
+        if TargBindEnabled then
+            Camera.CameraSubject = desync_setback
+        else
+            Camera.CameraSubject = LocalPlayer.Character.Humanoid
+        end
+        Client.Character.HumanoidRootPart.CFrame = Saved
+    end
+end)
+
+local Window = Library:Window({Name = "visage.gg | Private"})
+
+local GeneralPage = Window:Page({Name = "Main"})
+local CSyncPage = Window:Page({Name = "Rage"})
+local EffectsPage = Window:Page({Name = "Visuals"})
+local Settings = Window:Page({Name = "Settings"})
+
+local max_flakes = 100
+local snowflakes = {}
+local camera = workspace.CurrentCamera
+local snowing = true
+
+local flake_x_range = {-500000, 500000} 
+local flake_y_range = {20, 50} 
+local flake_z_range = {-500000, 500000}
+local colorsnow = Color3.new(1, 1, 1)
+
+
+do 
+local GeneralSection = GeneralPage:Section({Name = "General Settings", Side = "Left"})
+GeneralSection:Toggle({
+    Name = "Enabled",
+    Default = Justify.Enabled,
+    Callback = function(a) Justify.Enabled = a end
+}):Keybind({
+    Name = "Keybind",
+    Default = Justify.Keybind,
+    Callback = function(C) 
+        Justify.Keybind = C 
+    end
+})
+
+
+GeneralSection:Toggle({
+    Name = "Autoselect",
+    Default = Justify.Autoselect,
+    Callback = function(a) Justify.Autoselect = a end
+})
+GeneralSection:Textbox({
+    Name = "Prediction",
+    Default = tostring(Justify.Prediction),
+    Callback = function(a) Justify.Prediction = tonumber(a) or Justify.Prediction end
+})
+GeneralSection:Textbox({
+    Name = "Real Prediction",
+    Default = tostring(Justify.RealPrediction),
+    Callback = function(a) Justify.RealPrediction = tonumber(a) or Justify.RealPrediction end
+})
+GeneralSection:Toggle({
+    Name = "Resolver",
+    Default = Justify.Resolver,
+    Callback = function(a) Justify.Resolver = a end
+})
+GeneralSection:List({
+    Name = "Resolver Type",
+    Options = {"Recalculate", "Estimate"},
+    Default = Justify.ResolverType,
+    Callback = function(a) Justify.ResolverType = a end
+})
+GeneralSection:Textbox({
+    Name = "Jump Offset",
+    Default = tostring(Justify.JumpOffset),
+    Callback = function(a) Justify.JumpOffset = tonumber(a) or Justify.JumpOffset end
+})
+GeneralSection:Textbox({
+    Name = "Real Jump Offset",
+    Default = tostring(Justify.RealJumpOffset),
+    Callback = function(a) Justify.RealJumpOffset = tonumber(a) or Justify.RealJumpOffset end
+})
+GeneralSection:List({
+    Name = "Hit Part",
+    Options = {
+        "Head", "Torso", "LeftLeg", "RightLeg", "LeftArm", "RightArm", "HumanoidRootPart", "UpperTorso", "LowerTorso", 
+        "LeftUpperLeg", "LeftLowerLeg", "RightUpperLeg", "RightLowerLeg", "LeftHand", "RightHand", "LeftFoot", "RightFoot"
+    },
+    Default = Justify.HitParts[1],
+    Callback = function(a) Justify.HitParts = {a} end
+})
+GeneralSection:List({
+    Name = "Real Hit Part",
+    Options = {
+        "Head", "Torso", "LeftLeg", "RightLeg", "LeftArm", "RightArm", "HumanoidRootPart", "UpperTorso", "LowerTorso", 
+        "LeftUpperLeg", "LeftLowerLeg", "RightUpperLeg", "RightLowerLeg", "LeftHand", "RightHand", "LeftFoot", "RightFoot"
+    },
+    Default = Justify.RealHitPart,
+    Callback = function(a) Justify.RealHitPart = a end
+})
+GeneralSection:Toggle({
+    Name = "Knockout Check",
+    Default = Justify.KoCheck,
+    Callback = function(a) Justify.KoCheck = a end
+})
+GeneralSection:Toggle({
+    Name = "Look at",
+    Default = Justify.LookAt,
+    Callback = function(a) Justify.LookAt = a end
+})
+GeneralSection:Toggle({
+    Name = "View",
+    Default = Justify.ViewAt,
+    Callback = function(a) Justify.ViewAt = a end
+})
+
+
+
+local CSyncSection = CSyncPage:Section({Name = "CSync Settings", Side = "Left"})
+CSyncSection:Toggle({
+    Name = "Enabled",
+    Default = Justify.CSync.Enabled,
+    Callback = function(a) Justify.CSync.Enabled = a end
+})
+CSyncSection:List({
+    Name = "CSync Type",
+    Options = {"Orbit", "Random"},
+    Default = Justify.CSync.Type,
+    Callback = function(a) Justify.CSync.Type = a end
+})
+CSyncSection:Slider({
+    Name = "Distance",
+    Min = 1,
+    Max = 100,
+    Default = Justify.CSync.Distance,
+    Callback = function(a) Justify.CSync.Distance = a end
+})
+CSyncSection:Slider({
+    Name = "Height",
+    Min = 1,
+    Max = 100,
+    Default = Justify.CSync.Height,
+    Callback = function(a) Justify.CSync.Height = a end
+})
+CSyncSection:Slider({
+    Name = "Speed",
+    Min = 1,
+    Max = 100,
+    Default = Justify.CSync.Speed,
+    Callback = function(a) Justify.CSync.Speed = a end
+})
+CSyncSection:Slider({
+    Name = "Random Amount",
+    Min = 1,
+    Max = 100,
+    Default = Justify.CSync.RandomAmount,
+    Callback = function(a) Justify.CSync.RandomAmount = a end
+})
+
+local EffectsSection = EffectsPage:Section({Name = "Effects", Side = "Left"})
+local TargetSection = EffectsPage:Section({Name = "Target", Side = "Right"})
+local SnowSection = EffectsPage:Section({Name = "Snow", Side = "Right"})
+
+TargetSection:Toggle({
+    Name = "Highlight",
+    Default = Justify.HitEffect,
+    Callback = function(a) Justify.Highlight = a end
+}):Colorpicker({
+    Name = "Highlight Fill Color",
+    Default = utility.hi,
+    Callback = function(a) utility.hi = a end
+})
+TargetSection:Colorpicker({
+    Name = "Highlight Outline Color",
+    Default = utility.bye,
+    Callback = function(a) utility.bye = a end
+})
+
+EffectsSection:Toggle({
+    Name = "Hit Effect",
+    Default = Justify.HitEffect,
+    Callback = function(a) Justify.HitEffect = a end
+})
+EffectsSection:List({
+    Name = "Hit Effect Type",
+    Options = {"Nova", "Crescent Slash", "Coom", "Cosmic Explosion", "Slash", "Atomic Slash"},
+    Default = Justify.HitEffectType,
+    Callback = function(a) Justify.HitEffectType = a end
+})
+EffectsSection:Colorpicker({
+    Name = "Hit Effect Color",
+    Default = HitEffectModule.Settings.HitEffectColor,
+    Callback = function(a) HitEffectModule.Settings.HitEffectColor = a end
+})
+EffectsSection:Toggle({
+    Name = "Hit Sounds",
+    Default = Justify.HitSounds,
+    Callback = function(a) Justify.HitSounds = a end
+})
+EffectsSection:List({
+    Name = "Hit Sound",
+    Options = {"Neverlose", "Rust", "Minecraft", "Cod", "Bameware", "Gamesense", "BlackPencil"},
+    Default = Justify.HitSound,
+    Callback = function(a) Justify.HitSound = a end
+})
+EffectsSection:Toggle({
+    Name = "Hit Chams",
+    Default = Justify.HitChams,
+    Callback = function(a) Justify.HitChams = a end
+})
+EffectsSection:List({
+    Name = "Hit Chams Material",
+    Options = {"Neon", "SmoothPlastic", "Glass", "Wood", "Metal", "Plastic"},
+    Default = Justify.HitChamsMaterial,
+    Callback = function(a) Justify.HitChamsMaterial = a end
+})
+EffectsSection:Slider({
+    Name = "Hit Chams Duration",
+    Min = 1,
+    Max = 10,
+    Default = Justify.HitChamsDuration,
+    Callback = function(a) Justify.HitChamsDuration = a end
+})
+EffectsSection:Colorpicker({
+    Name = "Hit Chams Color",
+    Default = Justify.HitChamsColor,
+    Callback = function(a) Justify.HitChamsColor = a end
+})
+SnowSection:Toggle({
+    Name = "Snowing",
+    Default = snowing,
+    Callback = function(a) snowing = a end
+})
+
+SnowSection:Colorpicker({
+    Name = "Color",
+    Default = colorsnow,
+    Callback = function(a) colorsnow = a end
+})
+--
+
+
+SnowSection:Slider({
+    Name = "X Amount",
+    Min = 1,
+    Max = 100000000,
+    Default = flake_x_range[2],
+    Callback = function(a) print(a) end
+})
+
+SnowSection:Slider({
+    Name = "Y Amount",
+    Min = 1,
+    Max = 100,
+    Default = flake_x_range[1],
+    Callback = function(a) print(a) 
+end
+})
+
+SnowSection:Slider({
+    Name = "Z Amount",
+    Min = 1,
+    Max = 100,
+    Default = flake_x_range[2],
+    Callback = function(a) print(a) 
+  end
+})
+local guh = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+local dick = os.date("%Y-%m-%d")
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+
+local role = "Buyer"
+if localPlayer.Name == "27K_Gaming" then
+  role = "BurritoCat"
+elseif localPlayer.Name == "pzoz853" then
+  role = "Taco"
+end
+
+local plyaha = game.Players.LocalPlayer.Name
+local dick2 = string.sub(tostring(math.random()), 3, 8) 
+local what = {"Santa", "Christmas", "Snowing"}
+local halloweenCharacter = what[math.random(#what)]
+
+
+
+local Watermark = Library:Watermark({Name = string.format(" visage.gg | %s | %s | %s |", plyaha, dick2, halloweenCharacter)})
+
+do
+    local CFG = Settings:Section({Name = "Config", Zindex = 2})
+
+
+
+
+    local ConfigList = CFG:List({Name = "Config", Flag = "SettingConfigurationList", Options = {}})
+    CFG:Textbox({Flag = "SettingsConfigurationName", Name = "Config Name"})
+    
+    local CurrentList = {}
+
+    local function EnsureConfigsDirectoryExists()
+        if not isfolder("Ratz") then
+            makefolder("Ratz")
+        end
+    end
+
+    local function UpdateConfigList()
+        EnsureConfigsDirectoryExists()
+        local List = {}
+        for _, file in ipairs(listfiles("Ratz")) do
+            local FileName = file:gsub("Ratz/", ""):gsub("%.cfg$", "")
+            table.insert(List, FileName)
+        end
+
+        if #List ~= #CurrentList or table.concat(List) ~= table.concat(CurrentList) then
+            CurrentList = List
+            -- Update the options directly if Refresh does not exist
+            ConfigList.Options = CurrentList
+            if ConfigList.Refresh then
+                ConfigList:Refresh(CurrentList)
+            end
+        end
+    end
+
+    CFG:Button({
+        Name = "Create",
+        Callback = function()
+            EnsureConfigsDirectoryExists()
+            local ConfigName = Flags.SettingsConfigurationName
+            if ConfigName and ConfigName ~= "" then
+                local filePath = "Ratz/" .. ConfigName .. ".cfg"
+                if not isfile(filePath) then
+                    writefile(filePath, "")
+                    UpdateConfigList()
+                else
+                    Library:Notification("Config file already exists: " .. filePath)
+                end
+            else
+                Library:Notification("Config name cannot be empty.")
+            end
+        end
+    })
+
+    CFG:Button({
+        Name = "Save",
+        Callback = function()
+            local SelectedConfig = Flags.SettingConfigurationList
+            if SelectedConfig then
+                local filePath = "Ratz/" .. SelectedConfig .. ".cfg"
+                writefile(filePath, Library:GetConfig())
+            end
+        end
+    })
+
+    CFG:Button({
+        Name = "Load",
+        Callback = function()
+            local SelectedConfig = Flags.SettingConfigurationList
+            if SelectedConfig then
+                local filePath = "Ratz/" .. SelectedConfig .. ".cfg"
+                if isfile(filePath) then
+                    local success, err = pcall(function()
+                        Library:LoadConfig(readfile(filePath))
+                    end)
+                    if not success then
+                        print("Error loading config: " .. err)
+                    end
+                else
+                    print("Error: Config file does not exist.")
+                end
+            end
+        end
+    })
+
+    CFG:Button({
+        Name = "Delete",
+        Callback = function()
+            local SelectedConfig = Flags.SettingConfigurationList
+            if SelectedConfig then
+                local filePath = "Ratz/" .. SelectedConfig .. ".cfg"
+                if isfile(filePath) then
+                    delfile(filePath)
+                    UpdateConfigList()
+                else
+                    print("Error: Config file does not exist.")
+                end
+            end
+        end
+    })
+
+    CFG:Button({
+        Name = "Refresh",
+        Callback = UpdateConfigList
+    })
+
+    CFG:Keybind({
+        Name = "Menu Key",
+        Flag = "MenuKey",
+        UseKey = true,
+        Default = Enum.KeyCode.End,
+        Callback = function(State)
+            Library.UIKey = State
+        end
+    })
+
+    CFG:Colorpicker({
+        Name = "Menu Accent",
+        Flag = "MenuAccent",
+        Default = Library.Accent,
+        Callback = function(State)
+            Library:ChangeAccent(State)
+        end
+    })
+
+    CFG:Toggle({
+        Name = "Show Watermark",
+        Flag = "Watermark",
+        Callback = function(State)
+            Watermark:SetVisible(State)
+        end
+    })
+
+    CFG:Textbox({
+        Flag = "WatermarkText",
+        Name = "Watermark Text",
+        State = string.format(" #visage.gg | %s | %s | %s", plyaha, dick2, "Private"),
+        Callback = function(State)
+            Watermark:UpdateText(State)
+        end
+    })
+  end
+end
+
+local function create_flake()
+    local flake = Instance.new("Part")
+    flake.Size = Vector3.new(0.2, 0.2, 0.2)
+    flake.Anchored = true
+    flake.CanCollide = false
+    flake.Material = Enum.Material.Ice
+    flake.Color = colorsnow
+    local x = math.random(flake_x_range[1], flake_x_range[2])
+    local y = math.random(flake_y_range[1], flake_y_range[2])
+    local z = math.random(flake_z_range[1], flake_z_range[2])
+    flake.Position = Vector3.new(x, y, z)
+    flake.Parent = workspace
+    return flake
+end
+
+local function update_flakes()
+    for _, flake in ipairs(snowflakes) do
+        flake.Position -= Vector3.new(0, math.random(1, 3) * 0.1, 0)
+        if flake.Position.Y < 0 then
+            flake.Position = Vector3.new(
+                math.random(flake_x_range[1], flake_x_range[2]),
+                math.random(flake_y_range[1], flake_y_range[2]),
+                math.random(flake_z_range[1], flake_z_range[2])
+            )
+        end
+    end
+end
+
+local function destroy_flakes()
+    for _, flake in ipairs(snowflakes) do
+        flake:Destroy()
+    end
+    snowflakes = {}
+end
+
+local function create_snowflakes()
+    for i = 1, max_flakes do
+        table.insert(snowflakes, create_flake())
+    end
+end
+
+create_snowflakes()
+
+while true do
+    if snowing then
+        if #snowflakes == 0 then
+            create_snowflakes() 
+        end
+        update_flakes()
+    else
+        destroy_flakes()
+    end
+    task.wait(0.03)
+end
